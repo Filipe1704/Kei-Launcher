@@ -10,9 +10,9 @@ def is_admin():
     
 def run_admin():
     executable = sys.executable
-    if executable.endswith("python.exe"):
-        pw = executable.replace("python.exe", "pythonw.exe")
-        if os.path.exists(pw):
-            executable = pw
-    res = ctypes.windll.shell32.ShellExecuteW(None, "runas", executable, " ".join(sys.argv), None, 1)
+    if executable.lower().endswith(("python.exe", "pythonw.exe")):
+        params = " ".join([f'"{arg}"' for arg in sys.argv])
+    else:
+        params = " ".join([f'"{arg}"' for arg in sys.argv[1:]])
+    res = ctypes.windll.shell32.ShellExecuteW(None, "runas", executable, params, None, 1)
     return res > 32
