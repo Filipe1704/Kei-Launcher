@@ -22,8 +22,6 @@ class App(ctk.CTk):
         self.launch_manager.setup_icon()
         self.setting_manager.setup_configuration()
         
-
-        
         ORANGE_COLOR = "#a66100"
         ORANGE_HOVER = "#854d00"
         BLUE_COLOR = "#3b5b92"

@@ -23,9 +23,9 @@
 ## Project Structure
 The launcher is part of a multi-stage localization pipeline:
 
-* **[BA-TL-Assets](https://github.com/Special-Operation-Decagrammaton/BA-TL-Assets):** The source for compiled, game-ready assets and version manifests.
-* **[BA-TL-TEXT](https://github.com/Special-Operation-Decagrammaton/BA-TL-TEXT):** The community workspace for translation source files.
-* **[BA-RAW-TEXT](https://github.com/Special-Operation-Decagrammaton/BA-RAW-TEXT):** Reference repository containing raw localization dumps for version comparison.
+* **[Build-Assets](https://github.com/Special-Operation-Decagrammaton/Build-Assets):** The source for compiled, game-ready assets and version manifests.
+* **[TL-TEXT](https://github.com/Special-Operation-Decagrammaton/TL-TEXT):** The community workspace for translation source files.
+* **[RAW-TEXT](https://github.com/Special-Operation-Decagrammaton/RAW-TEXT):** Reference repository containing raw localization dumps for version comparison.
 
 ## Features
 - **Automated Versioning:** Uses manifest-based updates to minimize bandwidth usage.

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-REPO = "Special-Operation-Decagrammaton/BA-TL-Assets"
+REPO = "Special-Operation-Decagrammaton/Build-Assets"
 LAUNCHER_REPO = "Special-Operation-Decagrammaton/Kei-Launcher"
 VERSION = "1.2.0"
 CONFIG_DIR = Path(Path.home()).joinpath('Kei-Launcher')
