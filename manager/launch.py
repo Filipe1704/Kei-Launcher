@@ -1,6 +1,7 @@
 import os
 import platform
 import subprocess
+import threading
 import webbrowser
 import customtkinter as ctk
 
@@ -8,6 +9,7 @@ from config import VERSION
 
 from lib.helper import resource_path
 from manager.interface import AppInterface
+from model.i18n import t, LANG_NAMES, NAME_TO_CODE, current_language
 
 class LaunchManager:
     def __init__(self, app: AppInterface):
@@ -74,9 +76,9 @@ class LaunchManager:
             
         popup = ctk.CTkToplevel(self.app)
         self.settings_popup = popup
-        popup.title("Settings")
+        popup.title(t("settings"))
         
-        width, height = 400, 300
+        width, height = 400, 430
         screen_width = popup.winfo_screenwidth()
         screen_height = popup.winfo_screenheight()
         x = (screen_width // 2) - (width // 2)
@@ -90,7 +92,7 @@ class LaunchManager:
         title_label = ctk.CTkLabel(popup, text="Kei Launcher", font=("Roboto", 18, "bold"))
         title_label.pack(pady=(15, 5))
 
-        version_label = ctk.CTkLabel(popup, text=f"Version: v{VERSION}", font=("Roboto", 14))
+        version_label = ctk.CTkLabel(popup, text=f"{t('version')}: v{VERSION}", font=("Roboto", 14))
         version_label.pack(pady=5)
         
         def toggle_col():
@@ -98,30 +100,68 @@ class LaunchManager:
 
         close_on_launch_var = ctk.BooleanVar(value=self.app.game_config.CloseOnLaunch)
         col_switch = ctk.CTkSwitch(
-            popup, text="Close Launcher on Game Launch", 
+            popup, text=t("close_on_launch"), 
             variable=close_on_launch_var, 
             command=toggle_col,
             font=("Roboto", 14)
         )
         col_switch.pack(pady=15)
+
+        # Language selector
+        lang_frame = ctk.CTkFrame(popup, fg_color="transparent")
+        lang_frame.pack(pady=(0, 10))
+        ctk.CTkLabel(lang_frame, text=f"{t('language')}:", font=("Roboto", 14)).pack(side="left", padx=(0, 10))
+
+        def on_lang_change(choice):
+            code = NAME_TO_CODE.get(choice, "en")
+            self.app.setting_manager.set_language(code)
+            popup.destroy()
+            self.show_settings_popup()  # Reopens the popup in the new language.
+
+        lang_menu = ctk.CTkOptionMenu(lang_frame, values=list(LANG_NAMES.values()), command=on_lang_change, width=150)
+        lang_menu.set(LANG_NAMES.get(current_language(), "English"))
+        lang_menu.pack(side="left")
         
 
         btn_frame = ctk.CTkFrame(popup, fg_color="transparent")
         btn_frame.pack(fill="x", pady=(5, 0), padx=20)
 
         github_btn = ctk.CTkButton(
-            btn_frame, text="GitHub Repository", 
+            btn_frame, text=t("github_repo"), 
             command=self.open_github_link,
             width=120
         )
         github_btn.pack(side="left", expand=True, padx=5)
 
         update_btn = ctk.CTkButton(
-            btn_frame, text="Check Update",
+            btn_frame, text=t("launcher_check_update"),
             command=lambda: self.app.update_manager.start_check_launcher_update_thread(on_status=update_status),
             width=120
         )
         update_btn.pack(side="right", expand=True, padx=5)
+
+        # Clear Backup Button:
+        def clear_old_backups():
+            update_status(t("backup_clearing"), "yellow")
+
+            def work():
+                removed, freed = self.app.android_manager.prune_backups()
+                mb = freed / (1024 * 1024)
+                if removed == 0:
+                    msg, color = t("backup_none"), "gray"
+                else:
+                    msg, color = t("backup_cleared", n=removed, mb=f"{mb:.0f}"), "lightgreen"
+                self.app.after(0, lambda: update_status(msg, color))
+
+            threading.Thread(target=work, daemon=True).start()
+
+        backup_btn = ctk.CTkButton(
+            popup, text=t("clear_backups"),
+            command=clear_old_backups,
+            fg_color="gray30", hover_color="gray20",
+            width=200
+        )
+        backup_btn.pack(pady=(12, 0))
 
         status_label = ctk.CTkLabel(popup, text="", font=("Roboto", 12))
         status_label.pack(pady=10)
