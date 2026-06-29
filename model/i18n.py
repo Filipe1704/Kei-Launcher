@@ -1,7 +1,7 @@
 # Simple interface translation system: (EN/PT) - Default: English.
 
 _STRINGS = {
-    # Branch Descriptions:
+    # Main Interface:
     "installed_patch":    {"en": "Installed Patch",            "pt": "Patch Instalado"},
     "latest_patch":       {"en": "Latest Patch",               "pt": "Último Patch"},
     "no_patch_notes":     {"en": "No patch notes available.",  "pt": "Nenhuma nota de patch disponível."},
