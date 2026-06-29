@@ -1,7 +1,7 @@
 # Simple interface translation system: (EN/PT) - Default: English.
 
 _STRINGS = {
-    # Main Interface:
+    # Branch Descriptions:
     "installed_patch":    {"en": "Installed Patch",            "pt": "Patch Instalado"},
     "latest_patch":       {"en": "Latest Patch",               "pt": "Último Patch"},
     "no_patch_notes":     {"en": "No patch notes available.",  "pt": "Nenhuma nota de patch disponível."},
@@ -32,8 +32,7 @@ _STRINGS = {
     # Android Deploy:
     "android_select_branch": {"en": "Select a translation branch first!", "pt": "Selecione uma branch de tradução primeiro!"},
     "android_confirm_title": {"en": "Deploy to Android", "pt": "Instalar no Android"},
-    "android_confirm_body":  {"en": "This overwrites the game's table files on your phone with the '{branch}' translation.\n\nA backup is made first. Modifying game files can risk a ban — use a throwaway account.\n\nContinue?",
-                              "pt": "Isto vai sobrescrever os arquivos de tabela do jogo no seu celular com a tradução '{branch}'.\n\nUm backup é feito antes. Modificar arquivos do jogo tem risco de banimento — use uma conta descartável.\n\nContinuar?"},
+    "android_confirm_body":  {"en": "This overwrites the game's table files on your phone with the '{branch}' translation.\n\nModifying game files can risk a ban — use a throwaway account.\n\nContinue?", "pt": "Isto vai sobrescrever os arquivos de tabela do jogo no seu celular com a tradução '{branch}'.\n\nModificar arquivos do jogo tem risco de banimento — use uma conta descartável.\n\nContinuar?"},
     "android_yes":     {"en": "Yes, deploy", "pt": "Sim, instalar"},
     "android_cancel":  {"en": "Cancel",      "pt": "Cancelar"},
     "android_checking":   {"en": "Checking phone...",   "pt": "Verificando o celular..."},
@@ -44,16 +43,9 @@ _STRINGS = {
     "android_no_tables":  {"en": "This branch has no table files to deploy.", "pt": "Esta branch não tem arquivos de tabela para instalar."},
     "android_version_mismatch": {"en": "Phone game version differs from the patch. Update the game/patch first.", "pt": "A versão do jogo no celular é diferente do patch. Atualize o jogo/patch primeiro."},
     "android_downloading": {"en": "Downloading: {n}", "pt": "Baixando: {n}"},
-    "android_backing_up":  {"en": "Backing up: {n}",  "pt": "Backup: {n}"},
     "android_pushing":     {"en": "Pushing: {n}",     "pt": "Enviando: {n}"},
     "android_done":        {"en": "Done! Open the game on your phone to check.", "pt": "Pronto! Abra o jogo no celular para conferir."},
     "android_failed":      {"en": "Android deploy failed.", "pt": "Falha ao instalar no Android."},
-
-    # Clear Backups:
-    "clear_backups":   {"en": "Clear Old Backups", "pt": "Limpar Backups Antigos"},
-    "backup_clearing": {"en": "Clearing backups...", "pt": "Limpando backups..."},
-    "backup_none":     {"en": "No old backups to clear.", "pt": "Nenhum backup antigo para limpar."},
-    "backup_cleared":  {"en": "Cleared {n} backup(s), freed {mb} MB.", "pt": "{n} backup(s) apagado(s), {mb} MB liberados."},
 
     # Status (update.py)
     "st_select_branch":  {"en": "Select a branch first!", "pt": "Selecione uma branch primeiro!"},

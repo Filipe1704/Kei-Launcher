@@ -1,7 +1,6 @@
 import os
 import platform
 import subprocess
-import threading
 import webbrowser
 import customtkinter as ctk
 
@@ -78,7 +77,7 @@ class LaunchManager:
         self.settings_popup = popup
         popup.title(t("settings"))
         
-        width, height = 400, 430
+        width, height = 400, 370
         screen_width = popup.winfo_screenwidth()
         screen_height = popup.winfo_screenheight()
         x = (screen_width // 2) - (width // 2)
@@ -139,29 +138,6 @@ class LaunchManager:
             width=120
         )
         update_btn.pack(side="right", expand=True, padx=5)
-
-        # Clear Backup Button:
-        def clear_old_backups():
-            update_status(t("backup_clearing"), "yellow")
-
-            def work():
-                removed, freed = self.app.android_manager.prune_backups()
-                mb = freed / (1024 * 1024)
-                if removed == 0:
-                    msg, color = t("backup_none"), "gray"
-                else:
-                    msg, color = t("backup_cleared", n=removed, mb=f"{mb:.0f}"), "lightgreen"
-                self.app.after(0, lambda: update_status(msg, color))
-
-            threading.Thread(target=work, daemon=True).start()
-
-        backup_btn = ctk.CTkButton(
-            popup, text=t("clear_backups"),
-            command=clear_old_backups,
-            fg_color="gray30", hover_color="gray20",
-            width=200
-        )
-        backup_btn.pack(pady=(12, 0))
 
         status_label = ctk.CTkLabel(popup, text="", font=("Roboto", 12))
         status_label.pack(pady=10)

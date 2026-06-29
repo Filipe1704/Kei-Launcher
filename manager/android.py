@@ -1,4 +1,3 @@
-import datetime
 import shutil
 import subprocess
 import threading
@@ -36,8 +35,7 @@ class AndroidManager:
         return None
 
     @staticmethod
-    def tablebundle_files(manifest):
-        # Manifest files stored in TableBundles (ExcelDB.db, Excel.zip).
+    def tablebundle_files(manifest): # Manifest files stored in TableBundles (ExcelDB.db, Excel.zip).
         # The Font (resources.assets) is not included (It resides in the apk, so font lock for now...)
         out = []
         for f in manifest.Files:
@@ -50,53 +48,8 @@ class AndroidManager:
     def prefix_of(finalized: str) -> str:
         return finalized.split("_")[0] + "_"
 
-    # Backup
-    @staticmethod
-    def backup_root() -> Path:
-        return Path(CONFIG_DIR) / "android_backup"
-
     @classmethod
-    def list_backups(cls):
-        # Backup folders sorted by timestamp name, so oldest first.
-        root = cls.backup_root()
-        if not root.exists():
-            return []
-        return sorted([d for d in root.iterdir() if d.is_dir()], key=lambda d: d.name)
-
-    @staticmethod
-    def _dir_size(path: Path) -> int:
-        total = 0
-        for p in Path(path).rglob("*"):
-            if p.is_file():
-                try:
-                    total += p.stat().st_size
-                except OSError:
-                    pass
-        return total
-
-    @classmethod
-    def prune_backups(cls):
-        # It keeps only the oldest backup (the original game files) and deletes the rest.
-        # It returns the number of files deleted and the number of bytes freed.
-        backups = cls.list_backups()
-        if len(backups) <= 1:
-            return 0, 0
-        removed, freed = 0, 0
-        for d in backups[1:]:  # Everything except the oldest one.
-            freed += cls._dir_size(d)
-            shutil.rmtree(d, ignore_errors=True)
-            removed += 1
-        return removed, freed
-
-    @classmethod
-    def backups_size(cls):
-        # Total number and total bytes of all backups.
-        backups = cls.list_backups()
-        return len(backups), sum(cls._dir_size(d) for d in backups)
-
-    @classmethod
-    def version_ok(cls, finalized: str, device_files) -> bool:
-        # True if the phone already has exactly this file (same version).
+    def version_ok(cls, finalized: str, device_files) -> bool: # True if the phone already has exactly this file (same version).
         return finalized in device_files
 
     # ADB
@@ -141,8 +94,7 @@ class AndroidManager:
         um = self.app.update_manager
         self.app.after(0, lambda: um.display_status(text=t(key, **kw), text_color=color, stay=stay))
 
-    def _ensure_local(self, asset, branch_value):
-        # Ensures a local copy of the releases if they are not in the "android_cache" folder
+    def _ensure_local(self, asset, branch_value): # Ensures a local copy of the releases if they are not in the "android_cache" folder
         cache = Path(CONFIG_DIR) / "android_cache" / branch_value
         cache.mkdir(parents=True, exist_ok=True)
         dest = cache / str(asset.Hash)
@@ -210,15 +162,9 @@ class AndroidManager:
         self.app.after(0, lambda: um.toggle_progress(True))
         self.app.after(0, lambda: self.app.progress_bar.set(0))
         try:
-            backup_dir = Path(CONFIG_DIR) / "android_backup" / datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-            backup_dir.mkdir(parents=True, exist_ok=True)
-
             n = len(files)
             for i, asset in enumerate(files):
                 local = self._ensure_local(asset, branch_value)
-
-                self._status("android_backing_up", n=asset.OriginalFileName)
-                self._adb(adb_path, serial, "pull", f"{tb_dir}/{asset.FinalizedFileName}", str(backup_dir))
 
                 self._status("android_pushing", n=asset.OriginalFileName)
                 rc, out, err = self._adb(adb_path, serial, "push", str(local), f"{tb_dir}/{asset.FinalizedFileName}")
@@ -226,12 +172,6 @@ class AndroidManager:
                     raise RuntimeError(err or out)
 
                 self.app.after(0, lambda p=(i + 1) / n: self.app.progress_bar.set(p))
-
-            # Deletes old backups, keeping only the oldest one.
-            try:
-                self.prune_backups()
-            except Exception:
-                pass
 
             self.app.after(0, lambda: um.toggle_progress(False))
             self._status("android_done", "green", stay=False)
