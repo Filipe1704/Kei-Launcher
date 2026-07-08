@@ -32,7 +32,7 @@ _STRINGS = {
     # Android Deploy:
     "android_select_branch": {"en": "Select a translation branch first!", "pt": "Selecione uma branch de tradução primeiro!"},
     "android_confirm_title": {"en": "Deploy to Android", "pt": "Instalar no Android"},
-    "android_confirm_body":  {"en": "This overwrites the game's table files on your phone with the '{branch}' translation.\n\nModifying game files can risk a ban — use a throwaway account.\n\nContinue?", "pt": "Isto vai sobrescrever os arquivos de tabela do jogo no seu celular com a tradução '{branch}'.\n\nModificar arquivos do jogo tem risco de banimento — use uma conta descartável.\n\nContinuar?"},
+    "android_confirm_body":  {"en": "This overwrites the game's table files on your phone with the '{branch}' translation.\n\nModifying game files can risk account suspension or permanent ban.\n\nContinue?", "pt": "Isto vai sobrescrever os arquivos de tabela do jogo no seu celular com a tradução '{branch}'.\n\nModificar arquivos do jogo tem o risco de suspensão ou banimento permanente da conta.\n\nContinuar?"},
     "android_yes":     {"en": "Yes, deploy", "pt": "Sim, instalar"},
     "android_cancel":  {"en": "Cancel",      "pt": "Cancelar"},
     "android_checking":   {"en": "Checking phone...",   "pt": "Verificando o celular..."},
