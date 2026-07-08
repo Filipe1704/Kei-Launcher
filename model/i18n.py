@@ -19,7 +19,7 @@ _STRINGS = {
     "desc_none":   {"en": "No translation branch selected.", "pt": "Nenhuma branch de tradução selecionada."},
     "desc_en_ori": {"en": "Global English translation only.", "pt": "Tradução em inglês (Global)."},
     "desc_en_ext": {"en": "Global English translation with community additions.", "pt": "Tradução em inglês (Global) com adições da comunidade."},
-    "desc_pt_br":  {"en": "Português (Brasil) translation.", "pt": "Tradução em Português (Brasil)."},
+    "desc_pt_br":  {"en": "Portuguese (Brazil) translation.", "pt": "Tradução em Português (Brasil)."},
 
     # Settings Popup:
     "settings":        {"en": "Settings",              "pt": "Configurações"},
