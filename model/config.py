@@ -22,10 +22,12 @@ class LauncherConfig(BaseModel):
     Language: Language
     Branch: Branch
     CloseOnLaunch: Optional[bool] = True
+    AdbPath: Optional[Path] = Field(default=None)
     
 def load_config(file_path: Path) -> LauncherConfig:
     return LauncherConfig.model_validate_json(file_path.read_text())
 
 def save_config(config: LauncherConfig, file_path: Path) -> None:
     json_data = config.model_dump_json(indent=4)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text(json_data)

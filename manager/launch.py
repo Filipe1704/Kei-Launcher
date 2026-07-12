@@ -15,7 +15,7 @@ class LaunchManager:
         self.app = app
         
     def setup_window(self):
-        self.app.title("BA TL Launcher")
+        self.app.title("Kei Launcher")
         self.center_window(960, 640)
         self.app.resizable(False, False)
         
@@ -77,7 +77,7 @@ class LaunchManager:
         self.settings_popup = popup
         popup.title(t("settings"))
         
-        width, height = 400, 370
+        width, height = 400, 470
         screen_width = popup.winfo_screenwidth()
         screen_height = popup.winfo_screenheight()
         x = (screen_width // 2) - (width // 2)
@@ -130,17 +130,49 @@ class LaunchManager:
             command=self.open_github_link,
             width=120
         )
-        github_btn.pack(side="left", expand=True, padx=5)
+        github_btn.pack(side="left", padx=5)
 
         update_btn = ctk.CTkButton(
             btn_frame, text=t("launcher_check_update"),
             command=lambda: self.app.update_manager.start_check_launcher_update_thread(on_status=update_status),
             width=120
         )
-        update_btn.pack(side="right", expand=True, padx=5)
+        update_btn.pack(side="right", padx=5)
+
+        # adb folder set
+        def adb_status_text():
+            p = self.app.game_config.AdbPath
+            return f"ADB: {p}" if p else t("adb_not_set")
+
+        def select_adb():
+            result = self.app.setting_manager.set_adb_folder()
+            if result == "ok":
+                self.app.update_manager.display_status(text=adb_status_text(), text_color="green")
+                adb_status_lbl.configure(text=t("adb_set"), text_color="green")
+            elif result == "not_found":
+                adb_status_lbl.configure(text=t("adb_not_in_folder"), text_color="#e74c3c")
+
+        adb_frame = ctk.CTkFrame(popup, fg_color="transparent")
+        adb_frame.pack(fill="x", padx=20, pady=(10, 0))
+
+        adb_btn = ctk.CTkButton(adb_frame, text=t("select_adb_folder"), command=select_adb, width=120)
+        adb_btn.pack(side="left", padx=5)
+
+        ctk.CTkLabel(adb_frame, text=t("experimental"), text_color="yellow",
+                     font=("Roboto", 12, "bold")).pack(side="left", padx=10)
+
+        if self.app.game_config.AdbPath:
+            _adb_txt, _adb_col = t("adb_set"), "green"
+        else:
+            _adb_txt, _adb_col = t("adb_not_set"), "gray"
+        adb_status_lbl = ctk.CTkLabel(popup, text=_adb_txt, font=("Roboto", 11), text_color=_adb_col)
+        adb_status_lbl.pack(anchor="w", padx=25, pady=(4, 0))
 
         status_label = ctk.CTkLabel(popup, text="", font=("Roboto", 12))
         status_label.pack(pady=10)
 
         def update_status(msg, color):
             status_label.configure(text=msg, text_color=color)
+
+        # Kei-Chan!
+        self.app.kei.attach(popup)

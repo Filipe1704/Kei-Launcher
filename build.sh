@@ -23,7 +23,8 @@ echo "[4/4] Starting PyInstaller Build..."
 pyinstaller --noconsole --onefile \
     --icon="$ICON_PATH" \
     --name "$EXE_NAME" \
-    --add-data "asset;asset" \
+    --add-data "asset:asset" \
+    --add-data "asset/kei-chan:asset/kei-chan" \
     --collect-all customtkinter \
     --clean \
     "$MAIN_FILE"

@@ -46,6 +46,14 @@ _STRINGS = {
     "android_pushing":     {"en": "Pushing: {n}",     "pt": "Enviando: {n}"},
     "android_done":        {"en": "Done! Open the game on your phone to check.", "pt": "Pronto! Abra o jogo no celular para conferir."},
     "android_failed":      {"en": "Android deploy failed.", "pt": "Falha ao instalar no Android."},
+    "experimental":        {"en": "Experimental Feature", "pt": "Função Experimental"},
+    "experimental_deploy": {"en": "Experimental Feature, but it should work.", "pt": "Função Experimental, mas deve funcionar."},
+    "select_adb_folder":   {"en": "Select ADB Folder", "pt": "Selecionar Pasta do ADB"},
+    "android_no_adb_folder": {"en": "Select the ADB folder first (Settings ⚙).", "pt": "Selecione a pasta do ADB primeiro (Configurações ⚙)."},
+    "adb_set":             {"en": "ADB folder set.", "pt": "Pasta do ADB definida."},
+    "adb_not_in_folder":   {"en": "adb not found in that folder.", "pt": "adb não encontrado nessa pasta."},
+    "adb_select_title":    {"en": "Select the ADB folder (platform-tools)", "pt": "Selecione a pasta do ADB (platform-tools)"},
+    "adb_not_set":         {"en": "ADB: not set", "pt": "ADB: não definido"},
 
     # Status (update.py)
     "st_select_branch":  {"en": "Select a branch first!", "pt": "Selecione uma branch primeiro!"},

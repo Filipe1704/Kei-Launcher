@@ -2,7 +2,7 @@
 SETLOCAL
 
 SET VENV_PATH=.venv
-SET ICON_PATH=asset/kei.ico
+SET ICON_PATH=asset\kei.ico
 SET MAIN_FILE=main.py
 SET EXE_NAME=Kei_Launcher
 
@@ -26,6 +26,7 @@ pyinstaller --noconsole --onefile ^
     --icon=%ICON_PATH% ^
     --name %EXE_NAME% ^
     --add-data "asset;asset" ^
+    --add-data "asset/kei-chan;asset/kei-chan" ^
     --collect-all customtkinter ^
     --clean ^
     %MAIN_FILE%

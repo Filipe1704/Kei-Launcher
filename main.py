@@ -8,6 +8,7 @@ from manager.launch import LaunchManager
 from manager.setting import SettingManager
 from manager.update import UpdateManager
 from manager.android import AndroidManager
+from manager.kei import KeiChan
 from model.config import Branch
 from model.i18n import t, set_language
 
@@ -25,7 +26,7 @@ class App(ctk.CTk):
         self.launch_manager.setup_icon()
         self.setting_manager.setup_configuration()
 
-        # Default language interface / saved config.
+        # Default language interface
         try:
             set_language(self.game_config.Language.value if self.game_config else "en")
         except Exception:
@@ -164,13 +165,15 @@ class App(ctk.CTk):
         self.btn_original.pack_forget()
         self.btn_original.pack(pady=5)
 
-        # Deploy to Android (Blue) - It uses the selected branch.
+        # Deploy to Android (Blue)
         self.btn_android = ctk.CTkButton(
             self.col_right, text=t("deploy_android"), font=("Roboto", 14),
             width=btn_w, height=btn_h, fg_color=BLUE_COLOR, hover_color=BLUE_HOVER,
             command=self.android_manager.start_deploy
         )
-        self.btn_android.pack(pady=(15, 5))
+        self.btn_android.pack(pady=(15, 0))
+        self.lbl_android_exp = ctk.CTkLabel(self.col_right, text=t("experimental_deploy"), text_color="yellow", font=("Roboto", 13, "bold"),)
+        self.lbl_android_exp.pack(pady=(0, 5))
 
         # Footer Section
         self.footer_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -208,7 +211,10 @@ class App(ctk.CTk):
         # Start update check chain
         self.update_manager.start_check_launcher_update_thread(on_complete=self.update_manager.start_check_updates_thread)
 
-    def retranslate(self): # Reapply the interface text in the current language.
+        # Kei-Chan!
+        self.kei = KeiChan(self)
+
+    def retranslate(self): # Reapply the interface text in the current language
         self.installed_title.configure(text=t("installed_patch"))
         self.latest_title.configure(text=t("latest_patch"))
         self.branch_title.configure(text=t("branch"))
@@ -217,6 +223,7 @@ class App(ctk.CTk):
         self.btn_update.configure(text=t("install_update"))
         self.btn_original.configure(text=t("uninstall"))
         self.btn_android.configure(text=t("deploy_android"))
+        self.lbl_android_exp.configure(text=t("experimental_deploy"))
         self.btn_launch.configure(text=t("launch"))
         if self.game_config and self.game_config.Branch is not None:
             self.setting_manager.set_branch_description(self.game_config.Branch.value)
