@@ -54,6 +54,7 @@ jobs:
           --icon="${{ matrix.icon }}" \
           --name "Kei_Launcher_${{ matrix.os }}" \
           --add-data "asset${{ matrix.sep }}asset" \
+          --add-data "asset/kei-chan${{ matrix.sep }}asset/kei-chan" \
           --collect-all customtkinter \
           --clean \
           main.py

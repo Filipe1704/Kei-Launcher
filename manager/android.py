@@ -1,4 +1,3 @@
-import shutil
 import subprocess
 import threading
 from pathlib import Path
@@ -15,23 +14,16 @@ PKG = "com.YostarJP.BlueArchive"
 SUBDIR = f"Android/data/{PKG}/files/TableBundles"
 ROOTS = ["/sdcard", "/storage/emulated/0", "/data/media/0"]
 
-# Code logic was obtained from the android debug bridge (adb) documentation :)
+# Code logic was obtained from the android debug bridge (adb) documentation and Kei Launcher Code :) :D
 class AndroidManager:
     def __init__(self, app: AppInterface):
         self.app = app
 
     # Logic
-    @staticmethod
-    def find_adb():
-        for c in ("adb", "adb.exe"):
-            p = shutil.which(c)
-            if p:
-                return p
-        here = Path(__file__).resolve().parent.parent  # Launcher Root
-        for rel in ("adb.exe", "adb", "platform-tools/adb.exe", "platform-tools/adb"):
-            cand = here / rel
-            if cand.exists():
-                return str(cand)
+    def get_adb(self):
+        p = self.app.game_config.AdbPath
+        if p and Path(str(p)).exists():
+            return str(p)
         return None
 
     @staticmethod
@@ -81,6 +73,9 @@ class AndroidManager:
 
     # Flow
     def start_deploy(self):
+        if not self.get_adb():
+            self.app.update_manager.display_status(text=t("android_no_adb_folder"), text_color="red")
+            return
         branch = self.app.game_config.Branch
         if branch == Branch.NONE:
             self.app.update_manager.display_status(text=t("android_select_branch"), text_color="red")
@@ -120,9 +115,9 @@ class AndroidManager:
     def perform_deploy(self, branch_value):
         um = self.app.update_manager
 
-        adb_path = self.find_adb()
+        adb_path = self.get_adb()
         if not adb_path:
-            self._status("android_no_adb", "red", stay=False)
+            self._status("android_no_adb_folder", "red", stay=False)
             return
 
         self._status("android_checking")
