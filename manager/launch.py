@@ -4,7 +4,7 @@ import subprocess
 import webbrowser
 import customtkinter as ctk
 
-from config import VERSION
+from config import VERSION, ptbr
 
 from lib.helper import resource_path
 from manager.interface import AppInterface
@@ -106,20 +106,21 @@ class LaunchManager:
         )
         col_switch.pack(pady=15)
 
-        # Language selector
-        lang_frame = ctk.CTkFrame(popup, fg_color="transparent")
-        lang_frame.pack(pady=(0, 10))
-        ctk.CTkLabel(lang_frame, text=f"{t('language')}:", font=("Roboto", 14)).pack(side="left", padx=(0, 10))
+        # Language selector (only appears in --ptbr)
+        if ptbr:
+            lang_frame = ctk.CTkFrame(popup, fg_color="transparent")
+            lang_frame.pack(pady=(0, 10))
+            ctk.CTkLabel(lang_frame, text=f"{t('language')}:", font=("Roboto", 14)).pack(side="left", padx=(0, 10))
 
-        def on_lang_change(choice):
-            code = NAME_TO_CODE.get(choice, "en")
-            self.app.setting_manager.set_language(code)
-            popup.destroy()
-            self.show_settings_popup()  # Reopens the popup in the new language.
+            def on_lang_change(choice):
+                code = NAME_TO_CODE.get(choice, "en")
+                self.app.setting_manager.set_language(code)
+                popup.destroy()
+                self.show_settings_popup()  # Reopens the popup in the new language.
 
-        lang_menu = ctk.CTkOptionMenu(lang_frame, values=list(LANG_NAMES.values()), command=on_lang_change, width=150)
-        lang_menu.set(LANG_NAMES.get(current_language(), "English"))
-        lang_menu.pack(side="left")
+            lang_menu = ctk.CTkOptionMenu(lang_frame, values=list(LANG_NAMES.values()), command=on_lang_change, width=150)
+            lang_menu.set(LANG_NAMES.get(current_language(), "English"))
+            lang_menu.pack(side="left")
         
 
         btn_frame = ctk.CTkFrame(popup, fg_color="transparent")
@@ -138,35 +139,6 @@ class LaunchManager:
             width=120
         )
         update_btn.pack(side="right", padx=5)
-
-        # adb folder set
-        def adb_status_text():
-            p = self.app.game_config.AdbPath
-            return f"ADB: {p}" if p else t("adb_not_set")
-
-        def select_adb():
-            result = self.app.setting_manager.set_adb_folder()
-            if result == "ok":
-                self.app.update_manager.display_status(text=adb_status_text(), text_color="green")
-                adb_status_lbl.configure(text=t("adb_set"), text_color="green")
-            elif result == "not_found":
-                adb_status_lbl.configure(text=t("adb_not_in_folder"), text_color="#e74c3c")
-
-        adb_frame = ctk.CTkFrame(popup, fg_color="transparent")
-        adb_frame.pack(fill="x", padx=20, pady=(10, 0))
-
-        adb_btn = ctk.CTkButton(adb_frame, text=t("select_adb_folder"), command=select_adb, width=120)
-        adb_btn.pack(side="left", padx=5)
-
-        ctk.CTkLabel(adb_frame, text=t("experimental"), text_color="yellow",
-                     font=("Roboto", 12, "bold")).pack(side="left", padx=10)
-
-        if self.app.game_config.AdbPath:
-            _adb_txt, _adb_col = t("adb_set"), "green"
-        else:
-            _adb_txt, _adb_col = t("adb_not_set"), "gray"
-        adb_status_lbl = ctk.CTkLabel(popup, text=_adb_txt, font=("Roboto", 11), text_color=_adb_col)
-        adb_status_lbl.pack(anchor="w", padx=25, pady=(4, 0))
 
         status_label = ctk.CTkLabel(popup, text="", font=("Roboto", 12))
         status_label.pack(pady=10)

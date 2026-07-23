@@ -8,7 +8,6 @@ class AppInterface(Protocol):
     launch_manager: Any
     setting_manager: Any
     update_manager: Any
-    android_manager: Any
         
     game_config: LauncherConfig
     installed_game_manifest: PatchManifest
@@ -45,7 +44,6 @@ class AppInterface(Protocol):
     btn_check: ctk.CTkButton
     btn_update: ctk.CTkButton
     btn_original: ctk.CTkButton
-    btn_android: ctk.CTkButton
     
     # UI Elements: Footer & Progress
     footer_frame: ctk.CTkFrame

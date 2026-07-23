@@ -1,13 +1,12 @@
 import customtkinter as ctk
 
-from config import VERSION
+from config import VERSION, ptbr
 from PIL import Image
 from lib.helper import resource_path
 from lib.permission import is_admin, run_admin
 from manager.launch import LaunchManager
 from manager.setting import SettingManager
 from manager.update import UpdateManager
-from manager.android import AndroidManager
 from manager.kei import KeiChan
 from model.config import Branch
 from model.i18n import t, set_language
@@ -20,7 +19,6 @@ class App(ctk.CTk):
         self.launch_manager = LaunchManager(self)
         self.setting_manager = SettingManager(self)
         self.update_manager = UpdateManager(self)
-        self.android_manager = AndroidManager(self)
 
         self.launch_manager.setup_window()
         self.launch_manager.setup_icon()
@@ -28,9 +26,16 @@ class App(ctk.CTk):
 
         # Default language interface
         try:
-            set_language(self.game_config.Language.value if self.game_config else "en")
+            if ptbr:
+                set_language(self.game_config.Language.value if self.game_config else "en")
+            else:
+                set_language("en")
         except Exception:
             set_language("en")
+
+        # Outside of --ptbr, do not keep the pt-br branch active (also reset in memory, and not saved in the config)
+        if not ptbr and self.game_config and self.game_config.Branch == Branch.PT_BR:
+            self.game_config.Branch = Branch.NONE
 
         ORANGE_COLOR = "#a66100"
         ORANGE_HOVER = "#854d00"
@@ -120,9 +125,13 @@ class App(ctk.CTk):
 
         self.branch_title = ctk.CTkLabel(self.col_center, text=t("branch"), font=label_font)
         self.branch_title.pack(pady=(0, 10))
+        # Outside of --ptbr, it hides pt-br branch from the branch selector
+        _branch_values = Branch.list_values()
+        if not ptbr:
+            _branch_values = [b for b in _branch_values if b != "pt-br"]
         self.branch_option = ctk.CTkOptionMenu(
             self.col_center,
-            values=Branch.list_values(),
+            values=_branch_values,
             font=("Roboto", 18),
             width=220,
             height=45,
@@ -164,16 +173,6 @@ class App(ctk.CTk):
         self.btn_original = ctk.CTkButton(self.col_right, text=t("uninstall"), font=("Roboto", 14), **orange_style, command=self.update_manager.start_uninstall_thread)
         self.btn_original.pack_forget()
         self.btn_original.pack(pady=5)
-
-        # Deploy to Android (Blue)
-        self.btn_android = ctk.CTkButton(
-            self.col_right, text=t("deploy_android"), font=("Roboto", 14),
-            width=btn_w, height=btn_h, fg_color=BLUE_COLOR, hover_color=BLUE_HOVER,
-            command=self.android_manager.start_deploy
-        )
-        self.btn_android.pack(pady=(15, 0))
-        self.lbl_android_exp = ctk.CTkLabel(self.col_right, text=t("experimental_deploy"), text_color="yellow", font=("Roboto", 13, "bold"),)
-        self.lbl_android_exp.pack(pady=(0, 5))
 
         # Footer Section
         self.footer_frame = ctk.CTkFrame(self, fg_color="transparent")
@@ -222,8 +221,6 @@ class App(ctk.CTk):
         self.btn_check.configure(text=t("check_update"))
         self.btn_update.configure(text=t("install_update"))
         self.btn_original.configure(text=t("uninstall"))
-        self.btn_android.configure(text=t("deploy_android"))
-        self.lbl_android_exp.configure(text=t("experimental_deploy"))
         self.btn_launch.configure(text=t("launch"))
         if self.game_config and self.game_config.Branch is not None:
             self.setting_manager.set_branch_description(self.game_config.Branch.value)

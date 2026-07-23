@@ -107,18 +107,6 @@ class SettingManager:
             else:
                 self.app.update_manager.display_status(text="BlueArchive.exe and run.bat not found!", text_color="red")
                 
-    def set_adb_folder(self) -> str:
-        folder = filedialog.askdirectory(title=t("adb_select_title"))
-        if not folder:
-            return "cancelled"
-        for name in ("adb.exe", "adb"):
-            cand = Path(folder) / name
-            if cand.exists():
-                self.app.game_config.AdbPath = cand
-                save_config(self.app.game_config, CONFIG_PATH)
-                return "ok"
-        return "not_found"
-
     def toggle_close_on_launch(self, value: bool):
         self.app.game_config.CloseOnLaunch = value
         save_config(self.app.game_config, CONFIG_PATH)
