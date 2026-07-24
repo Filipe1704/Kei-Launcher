@@ -22,7 +22,6 @@ class LauncherConfig(BaseModel):
     Language: Language
     Branch: Branch
     CloseOnLaunch: Optional[bool] = True
-    AdbPath: Optional[Path] = Field(default=None)
     
 def load_config(file_path: Path) -> LauncherConfig:
     return LauncherConfig.model_validate_json(file_path.read_text())
